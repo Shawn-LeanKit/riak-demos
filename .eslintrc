@@ -1,0 +1,14 @@
+{
+  "globals": {
+    "DEBUG": false
+  },
+  "ecmaFeatures": {
+    "modules" : true
+  },
+  "env": {
+    "browser": false,
+    "node": true,
+    "es6": true,
+    "mocha": true
+  }
+}

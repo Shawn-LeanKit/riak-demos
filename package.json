@@ -1,0 +1,16 @@
+{
+  "name": "riak-demos",
+  "version": "0.0.0",
+  "description": "Demonstrates various Riak db operations",
+  "main": "index.js",
+  "author": "Shawn Hartsell",
+  "license": "MIT",
+  "dependencies": {
+    "basho-riak-client": "^1.9.1",
+    "bluebird": "^3.1.1",
+    "co": "^4.6.0",
+    "co-each": "^0.1.0",
+    "unglob": "^0.1.2",
+    "vorpal": "^1.4.1"
+  }
+}

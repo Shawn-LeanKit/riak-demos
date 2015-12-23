@@ -1,13 +1,13 @@
 var vorpal = require( "vorpal" )();
+var Promise = require( "bluebird" );
 var unglob = require( "unglob" );
-var co = require( "co" );
-var each = require( "co-each" );
+var globAsync = Promise.promisify( require( "glob" ) );
 
-var init = co.wrap( function*() {
+var init = Promise.coroutine( function*() {
 	var vorpal = require( "vorpal" )();
-	var demoFiles = yield* unglob.directory( [ "*-demo.js" ], __dirname );
+	var demoFiles = yield globAsync( "*-demo.js", { cwd: __dirname } );
 
-	yield each( demoFiles, ( file ) => {
+	yield Promise.each( demoFiles, ( file ) => {
 		var demo = require( `./${file}` );
 
 		vorpal.command( demo.name, demo.description )
@@ -15,11 +15,12 @@ var init = co.wrap( function*() {
 			demo.start()
 			.then( callback )
 			.catch( err => {
-				vorpal.log( `Error in demo!${err.stack}` );
+				vorpal.log( `Error in demo!\n${err.stack}` );
 				process.exit( 1 );
 			} );
 		} );
 	} );
+
 	return vorpal;
 } );
 

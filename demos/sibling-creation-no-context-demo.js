@@ -1,9 +1,8 @@
 var vorpal = require( "vorpal" )();
-var co = require( "co" );
-var each = require( "co-each" );
 var getClient = require( "../riak/promisified-client" );
+var Promise = require( "bluebird" );
 
-var demo = co.wrap( function*() {
+var demo = Promise.coroutine( function*() {
 	var bucket = "siblings";
 	var key = "foo";
 	vorpal.log( "----------DEMO START----------" );

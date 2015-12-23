@@ -3,7 +3,7 @@ var getClient = require( "../riak/promisified-client" );
 var Promise = require( "bluebird" );
 
 var demo = Promise.coroutine( function*() {
-	var bucket = "siblings";
+	var bucket = "demo-sibling-creatin-no-context";
 	var key = "foo";
 	vorpal.log( "----------DEMO START----------" );
 
@@ -15,21 +15,20 @@ var demo = Promise.coroutine( function*() {
 		lastWriteWins: false
 	};
 
-	var result = yield client.storeBucketPropsAsync( bucketProps );
-
 	var storeOpts = {
 		bucket: bucket,
 		key: key,
 		value: "hi"
 	};
 
+	var result = yield client.storeBucketPropsAsync( bucketProps );
+
 	vorpal.log( "making 2 writes to the same key with no casual context" );
-	yield Promise.resolve( client.storeValueAsync( storeOpts ) );
-	//this write will create a sibling b/c there is not casual context associated
-	yield Promise.resolve( client.storeValueAsync( storeOpts ) );
+
+	yield Promise.all( [ client.storeValueAsync( storeOpts ), client.storeValueAsync( storeOpts ) ] );
 
 	var result = yield client.fetchValueAsync( {
-		bucket: "siblings",
+		bucket: bucket,
 		key: key
 	} );
 
@@ -38,7 +37,7 @@ var demo = Promise.coroutine( function*() {
 	vorpal.log( result );
 
 	yield client.deleteValueAsync( {
-		bucket: "siblings",
+		bucket: bucket,
 		key: key
 	} );
 
